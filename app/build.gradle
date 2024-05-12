@@ -4,6 +4,10 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
+application {
+    mainClass = 'hexlet.code.App'
+}
+
 group = 'hexlet.code'
 version = '1.0-SNAPSHOT'
 
@@ -17,9 +21,9 @@ dependencies {
 
     implementation("gg.jte:jte:3.1.0")
     implementation("org.slf4j:slf4j-simple:2.0.9")
-    implementation("io.javalin:javalin:5.6.2")
-    implementation("io.javalin:javalin-bundle:5.6.2")
-    implementation("io.javalin:javalin-rendering:5.6.2")
+    implementation("io.javalin:javalin:5.6.4")
+    implementation("io.javalin:javalin-bundle:5.6.4")
+    implementation("io.javalin:javalin-rendering:5.6.4")
 
 }
 
