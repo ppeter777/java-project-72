@@ -10,7 +10,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.stream.Collectors;
+
 
 public class App {
 
@@ -22,9 +24,20 @@ public class App {
     }
 
     public static void main(String[] args) throws SQLException {
-        
+
+        // Retrieve all environment variables
+        Map<String, String> env_var = System.getenv();
+//        System.out.println(System.getenv().getOrDefault("JDBC_DATABASE_URL", "DEFAULT_VALUE"));
+//        System.out.println(System.getenv("JDBC_DATABASE_URL"));
+
+        // Loop through all environment variables
+        for (String envName : env_var.keySet()) {
+            // Print environment variable name and value to console
+            System.out.format("%s=%s", envName, env_var.get(envName));
+            System.out.println();
+        }
         var app = getApp()
-                .get("/", ctx -> ctx.result("Hello World" + getDBUrl()))
+                .get("/", ctx -> ctx.result("Hello World " + System.getenv("USER") + " " + System.getenv("JDBC_DATABASE_URL")))
                 .start(getPort());
     }
 
@@ -49,6 +62,6 @@ public class App {
     }
 
     public static String getDBUrl() {
-        return System.getenv().getOrDefault(JDBC_DATABASE_URL, "jdbc:h2:mem:Url");
+        return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:Url");
     }
 }
