@@ -10,6 +10,8 @@ RUN wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-b
 
 ENV GRADLE_HOME=/opt/gradle
 
+ENV JDBC_DATABASE_URL=jdbc:postgresql://dpg-cp15j68l6cac73eofa5g-a:5432/postgres?password=yZvQYakk6ZD9VDHGCOcdR9VHspneOtkz&user=postgresql_p72_user
+
 RUN mv gradle-${GRADLE_VERSION} ${GRADLE_HOME}
 
 ENV PATH=$PATH:$GRADLE_HOME/bin
