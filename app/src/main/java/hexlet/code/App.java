@@ -24,7 +24,7 @@ public class App {
     public static void main(String[] args) throws SQLException {
 
         var app = getApp()
-                .get("/", ctx -> ctx.result("Hello World" + getDBUrl()))
+                .get("/", ctx -> ctx.result("Hello World " + getDBUrl()))
                 .start(getPort());
     }
 
@@ -49,6 +49,6 @@ public class App {
     }
 
     public static String getDBUrl() {
-        return System.getenv().getOrDefault(JDBC_DATABASE_URL, "jdbc:h2:mem:Url");
+        return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:Url");
     }
 }
