@@ -14,6 +14,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
 
+import gg.jte.ContentType;
+import gg.jte.TemplateEngine;
+import io.javalin.rendering.template.JavalinJte;
+import gg.jte.resolve.ResourceCodeResolver;
+
 public class App {
 
     private static int getPort() {
@@ -44,7 +49,9 @@ public class App {
 
         var app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
+            config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
+        app.get("/test", ctx -> ctx.render("index.jte"));
         return app;
     }
 
@@ -52,10 +59,10 @@ public class App {
         return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:hexlet_project;DB_CLOSE_DELAY=-1;");
     }
 
-    private static String readResourceFile(String fileName) throws IOException {
-        var inputStream = App.class.getClassLoader().getResourceAsStream(fileName);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-            return reader.lines().collect(Collectors.joining("\n"));
-        }
-}
+    private static TemplateEngine createTemplateEngine() {
+        ClassLoader classLoader = App.class.getClassLoader();
+        ResourceCodeResolver codeResolver = new ResourceCodeResolver("templates", classLoader);
+        TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
+        return templateEngine;
+    }
 }
