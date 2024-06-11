@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -12,13 +13,15 @@ import java.time.LocalDateTime;
 @ToString
 
 public class Url {
-    private int id;
+    private long id;
     private String name;
-    private LocalDateTime created_at;
+    private Timestamp created_at;
+    private Timestamp checked_at;
+    private Integer responseCode;
 
-    public Url(String name) {
+    public Url(String name, Timestamp timestamp) {
         this.name = name;
-        this.created_at = LocalDateTime.now();
+        this.created_at = timestamp;
     }
 
 }

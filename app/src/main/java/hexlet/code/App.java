@@ -2,23 +2,38 @@ package hexlet.code;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import hexlet.code.dto.MainPage;
+import hexlet.code.dto.UrlsPage;
 import hexlet.code.model.Url;
 import hexlet.code.repository.BaseRepository;
+import hexlet.code.repository.UrlRepository;
+import hexlet.code.utils.NamedRoutes;
 import io.javalin.Javalin;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import io.javalin.rendering.template.JavalinJte;
 import gg.jte.resolve.ResourceCodeResolver;
+import hexlet.code.repository.UrlRepository;
+import lombok.extern.slf4j.Slf4j;
 
+import static io.javalin.rendering.template.TemplateUtil.model;
+
+import java.net.URL;
+
+@Slf4j
 public class App {
 
     private static int getPort() {
@@ -26,13 +41,12 @@ public class App {
         return Integer.valueOf(port);
     }
 
-    public static void main(String[] args) throws SQLException, IOException {
+    public static void main(String[] args) throws SQLException, IOException, URISyntaxException {
         var app = getApp()
-                .get("/", ctx -> ctx.result("Hello World " + getDBUrl()))
                 .start(getPort());
     }
 
-    public static Javalin getApp() throws SQLException, IOException {
+    public static Javalin getApp() throws SQLException, IOException, URISyntaxException {
         var hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(getDBUrl());
         var dataSource = new HikariDataSource(hikariConfig);
@@ -46,12 +60,30 @@ public class App {
 
 
         BaseRepository.dataSource = dataSource;
+        var inputUrl1 = "https://lenta.ru";
+        var inputUrl2 = "https://yandex.ru";
+        var u1 = new URI(inputUrl1).toURL();
+        var u2 = new URI(inputUrl2).toURL();
+        var url1 = new Url(u1.getHost(), new Timestamp(System.currentTimeMillis()));
+        var url2 = new Url(u2.getHost(), new Timestamp(System.currentTimeMillis()));
+        UrlRepository.save(url1);
+        UrlRepository.save(url2);
+
+        var a = UrlRepository.getEntities();
+
+        System.out.println(a);
+
 
         var app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
-        app.get("/test", ctx -> ctx.render("index.jte"));
+
+        app.get(NamedRoutes.mainPagePath(), ctx -> ctx.render("index.jte"));
+        app.post(NamedRoutes.urlsPath(), UrlController::create);
+        app.get(NamedRoutes.urlsPath(), UrlController::index);
+        app.get("/url/{id}", UrlController::show);
+
         return app;
     }
 
