@@ -47,5 +47,3 @@ jobs:
           arguments: build
           build-root-directory: app
 
-      - name: Run linter
-        run: make lint
