@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id 'checkstyle'
 }
 
 application {
@@ -30,6 +31,8 @@ dependencies {
 
     implementation("org.postgresql:postgresql:42.7.2")
 
+    testImplementation("org.assertj:assertj-core:3.25.3")
+
 
     compileOnly 'org.projectlombok:lombok:1.18.32'
     annotationProcessor 'org.projectlombok:lombok:1.18.32'
@@ -43,4 +46,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion = '10.11.0'
 }
