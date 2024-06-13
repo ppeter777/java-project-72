@@ -1,27 +1,23 @@
 package hexlet.code.repository;
 
 import hexlet.code.model.Url;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import java.sql.Statement;
 
-
-public class UrlRepository extends BaseRepository{
+public class UrlRepository extends BaseRepository {
     private static List<Url> urls = new ArrayList<>();
 
     public static void save(Url url) throws SQLException {
-        String sql = "INSERT INTO urls (name, created_at) VALUES (?, ?)";
+        String sql = "INSERT INTO urls (name, createdAt) VALUES (?, ?)";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
-            preparedStatement.setTimestamp(2, url.getCreated_at());
+            preparedStatement.setTimestamp(2, url.getCreatedAt());
             preparedStatement.executeUpdate();
             var generatedKeys = preparedStatement.getGeneratedKeys();
-            // Устанавливаем ID в сохраненную сущность
             if (generatedKeys.next()) {
                 url.setId(generatedKeys.getLong(1));
             } else {
@@ -39,7 +35,7 @@ public class UrlRepository extends BaseRepository{
             while (resultSet.next()) {
                 var id = resultSet.getInt("id");
                 var name = resultSet.getString("name");
-                var createdAt = resultSet.getTimestamp("created_at");
+                var createdAt = resultSet.getTimestamp("createdAt");
                 var urll = new Url(name, createdAt);
                 urll.setId(id);
                 result.add(urll);
@@ -56,7 +52,7 @@ public class UrlRepository extends BaseRepository{
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 var name = resultSet.getString("name");
-                var timestamp = resultSet.getTimestamp("created_at");
+                var timestamp = resultSet.getTimestamp("createdAt");
                 var url = new Url(name, timestamp);
                 url.setId(id);
                 return Optional.of(url);
@@ -64,6 +60,4 @@ public class UrlRepository extends BaseRepository{
             return Optional.empty();
         }
     }
-
-
 }

@@ -30,9 +30,9 @@
             <td>${url.getId()}</td>
             <td><a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a></td>
             <td>
-                @if(url.getChecked_at() == null)
+                @if(url.getCheckedAt() == null)
                 @else
-                    ${url.getChecked_at().toString()}
+                    ${url.getCheckedAt().toString()}
                 @endif
             </td>
             <td>

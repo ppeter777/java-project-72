@@ -15,11 +15,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 import gg.jte.ContentType;
@@ -58,7 +55,6 @@ public class App {
             statement.execute(sql);
         }
 
-
         BaseRepository.dataSource = dataSource;
         var inputUrl1 = "https://lenta.ru";
         var inputUrl2 = "https://yandex.ru";
@@ -69,16 +65,10 @@ public class App {
         UrlRepository.save(url1);
         UrlRepository.save(url2);
 
-        var a = UrlRepository.getEntities();
-
-        System.out.println(a);
-
-
         var app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
-
         app.get(NamedRoutes.mainPagePath(), ctx -> ctx.render("index.jte"));
         app.post(NamedRoutes.urlsPath(), UrlController::create);
         app.get(NamedRoutes.urlsPath(), UrlController::index);

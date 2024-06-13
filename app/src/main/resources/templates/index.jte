@@ -10,7 +10,6 @@
     <body>
     <div class="col-lg-8 mx-auto p-4 py-md-5">
         <main>
-
             <div class="container">
               <div class="row">
                 <div class="col">

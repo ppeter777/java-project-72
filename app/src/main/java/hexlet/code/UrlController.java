@@ -10,7 +10,6 @@ import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;

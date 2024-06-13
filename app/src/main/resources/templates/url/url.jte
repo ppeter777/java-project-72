@@ -28,7 +28,7 @@ content = @`
                 <tr>
                     <td>${page.getUrl().getId()}</td>
                     <td>${page.getUrl().getName()}</td>
-                    <td>${page.getUrl().getCreated_at().toString()}</td>
+                    <td>${page.getUrl().getCreatedAt().toString()}</td>
                 </tr>
         </table>
 `,
