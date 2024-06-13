@@ -53,11 +53,6 @@ checkstyle {
     toolVersion = '10.11.0'
 }
 
-jacoco {
-    toolVersion = "0.8.11"
-    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
-}
-
 jacocoTestReport {
     reports {
         xml.required = true
