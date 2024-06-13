@@ -2,14 +2,11 @@ package hexlet.code;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import hexlet.code.dto.MainPage;
-import hexlet.code.dto.UrlsPage;
 import hexlet.code.model.Url;
 import hexlet.code.repository.BaseRepository;
 import hexlet.code.repository.UrlRepository;
 import hexlet.code.utils.NamedRoutes;
 import io.javalin.Javalin;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,17 +15,11 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.stream.Collectors;
-
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import io.javalin.rendering.template.JavalinJte;
 import gg.jte.resolve.ResourceCodeResolver;
-import hexlet.code.repository.UrlRepository;
 import lombok.extern.slf4j.Slf4j;
-
-import static io.javalin.rendering.template.TemplateUtil.model;
-
-import java.net.URL;
 
 @Slf4j
 public class App {
