@@ -3,23 +3,21 @@ package hexlet.code;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import hexlet.code.controller.UrlController;
-import hexlet.code.model.Url;
 import hexlet.code.repository.BaseRepository;
-import hexlet.code.repository.UrlRepository;
 import hexlet.code.utils.NamedRoutes;
 import io.javalin.Javalin;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.stream.Collectors;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import io.javalin.rendering.template.JavalinJte;
 import gg.jte.resolve.ResourceCodeResolver;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,6 +31,8 @@ public class App {
     public static void main(String[] args) throws SQLException, IOException, URISyntaxException {
         var app = getApp()
                 .start(getPort());
+        HttpResponse response = Unirest.get("http://localhost:7070/urls")
+                .asJson();
     }
 
     public static Javalin getApp() throws SQLException, IOException, URISyntaxException {
@@ -46,26 +46,17 @@ public class App {
              var statement = connection.createStatement()) {
             statement.execute(sql);
         }
-
         BaseRepository.dataSource = dataSource;
-        var inputUrl1 = "https://lenta.ru";
-        var inputUrl2 = "https://yandex.ru";
-        var u1 = new URI(inputUrl1).toURL();
-        var u2 = new URI(inputUrl2).toURL();
-        var url1 = new Url(u1.getHost(), new Timestamp(System.currentTimeMillis()));
-        var url2 = new Url(u2.getHost(), new Timestamp(System.currentTimeMillis()));
-        UrlRepository.save(url1);
-        UrlRepository.save(url2);
-
         var app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
         app.get(NamedRoutes.mainPagePath(), ctx -> ctx.render("index.jte"));
         app.post(NamedRoutes.urlsPath(), UrlController::create);
+        app.get(NamedRoutes.checkPath("{id}"), UrlController::check);
         app.get(NamedRoutes.urlsPath(), UrlController::index);
-        app.get("/url/{id}", UrlController::show);
-
+        app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
+        app.post(NamedRoutes.checkPath("{id}"), UrlController::check);
         return app;
     }
 

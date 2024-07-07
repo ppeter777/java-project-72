@@ -1,3 +1,5 @@
+@import java.text.SimpleDateFormat
+
 @import hexlet.code.utils.NamedRoutes
 @import hexlet.code.dto.UrlsPage;
 @param UrlsPage page
@@ -32,7 +34,7 @@
             <td>
                 @if(url.getCheckedAt() == null)
                 @else
-                    ${url.getCheckedAt().toString()}
+                    ${new SimpleDateFormat("dd/MM/yyyy hh:mm").format(url.getCheckedAt())}
                 @endif
             </td>
             <td>
