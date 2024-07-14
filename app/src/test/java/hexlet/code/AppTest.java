@@ -1,9 +1,22 @@
 package hexlet.code;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
+
+
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import io.javalin.rendering.template.JavalinJte;
+
+import hexlet.code.controller.UrlController;
 import hexlet.code.model.Url;
 import hexlet.code.repository.UrlRepository;
+import hexlet.code.utils.NamedRoutes;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -57,5 +70,26 @@ public class AppTest {
             var response = client.get("/url/999999");
             assertThat(response.code()).isEqualTo(404);
         });
+
+    }
+
+    @Test
+    public void testRequest() throws Exception {
+
+        MockWebServer mockServer = new MockWebServer();
+        MockResponse mockResponse = new MockResponse()
+                .setBody("bla bla bla");
+        mockServer.enqueue(mockResponse);
+        mockServer.start();
+        String baseUrl = mockServer.url("/").toString();
+        RecordedRequest request = mockServer.takeRequest();
+        app.get(baseUrl, UrlController::index);
+
+//        JavalinTest.test(app, (server, client) -> {
+//            var response = client.get(baseUrl);
+//            assertThat(response.body().toString().contains("bla bla bla"));
+//        });
+//        var response = app.get(baseUrl.toString(), UrlController::show);
+//        assertThat(response.code()).isEqualTo(200);
     }
 }
