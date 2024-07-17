@@ -49,6 +49,11 @@ public class UrlController {
         ctx.render("urls/index.jte", model("page", page));
     }
 
+    public static void indexStart(Context ctx) throws SQLException {
+        ctx.render("index.jte");
+    }
+
+
     public static void check(Context ctx) throws SQLException, IOException {
         var check = new UrlCheck();
         var id = ctx.pathParamAsClass("id", Long.class).get();

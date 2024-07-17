@@ -51,7 +51,7 @@ public class App {
             config.plugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
-        app.get(NamedRoutes.mainPagePath(), ctx -> ctx.render("index.jte"));
+        app.get(NamedRoutes.mainPagePath(), UrlController::indexStart);
         app.post(NamedRoutes.urlsPath(), UrlController::create);
         app.get(NamedRoutes.checkPath("{id}"), UrlController::check);
         app.get(NamedRoutes.urlsPath(), UrlController::index);

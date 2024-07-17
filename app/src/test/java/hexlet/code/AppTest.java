@@ -5,8 +5,8 @@ package hexlet.code;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+
 import io.javalin.rendering.template.JavalinJte;
 
 import hexlet.code.controller.UrlController;
@@ -17,6 +17,8 @@ import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,10 +29,27 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class AppTest {
 
-    Javalin app;
+    private Javalin app;
+    private static MockWebServer testServer;
+    private static String testUrl;
+
+    @BeforeAll
+    public static void setUpMockServer() throws Exception {
+        testServer = new MockWebServer();
+        testServer.enqueue(new MockResponse().setBody("bla bla"));
+        testServer.enqueue(new MockResponse().setStatus("200"));
+        testServer.start();
+        testUrl = testServer.url("/test").toString();
+    }
+
+    @AfterAll
+    public static void shutDown() throws IOException {
+        testServer.shutdown();
+    }
 
     @BeforeEach
     public final void setUp() throws IOException, SQLException, URISyntaxException {
@@ -42,7 +61,7 @@ public class AppTest {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/");
             assertThat(response.code()).isEqualTo(200);
-            assertThat(response.body().string()).contains("Бесплатно проверяйте сайты на SEO пригодность");
+            assertThat(response.body().string()).contains("Анализатор страниц");
         });
     }
 
@@ -75,21 +94,13 @@ public class AppTest {
 
     @Test
     public void testRequest() throws Exception {
-
-        MockWebServer mockServer = new MockWebServer();
-        MockResponse mockResponse = new MockResponse()
-                .setBody("bla bla bla");
-        mockServer.enqueue(mockResponse);
-        mockServer.start();
-        String baseUrl = mockServer.url("/").toString();
-        RecordedRequest request = mockServer.takeRequest();
-        app.get(baseUrl, UrlController::index);
-
-//        JavalinTest.test(app, (server, client) -> {
-//            var response = client.get(baseUrl);
-//            assertThat(response.body().toString().contains("bla bla bla"));
-//        });
-//        var response = app.get(baseUrl.toString(), UrlController::show);
-//        assertThat(response.code()).isEqualTo(200);
+        var url = new Url(testUrl, Timestamp.valueOf(LocalDateTime.now()));
+        UrlRepository.save(url);
+        JavalinTest.test(app, (server, client) -> {
+            var mainPagePath = NamedRoutes.mainPagePath();
+            try (var response = client.get(mainPagePath)) {
+                assertThat(response.code()).isEqualTo(200);
+            }
+        });
     }
 }
