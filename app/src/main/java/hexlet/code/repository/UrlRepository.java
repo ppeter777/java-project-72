@@ -2,8 +2,6 @@ package hexlet.code.repository;
 
 import hexlet.code.model.Url;
 import hexlet.code.model.UrlCheck;
-
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -115,6 +113,24 @@ public class UrlRepository extends BaseRepository {
             stmt.setLong(1, id);
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
+                var name = resultSet.getString("name");
+                var timestamp = resultSet.getTimestamp("createdAt");
+                var url = new Url(name, timestamp);
+                url.setId(id);
+                return Optional.of(url);
+            }
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Url> findByName(String urlName) throws SQLException {
+        var sql = "SELECT * FROM urls WHERE name = ?";
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, urlName);
+            var resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                var id = resultSet.getLong("id");
                 var name = resultSet.getString("name");
                 var timestamp = resultSet.getTimestamp("createdAt");
                 var url = new Url(name, timestamp);

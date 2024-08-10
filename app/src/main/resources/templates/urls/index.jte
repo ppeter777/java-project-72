@@ -6,47 +6,43 @@
 
 @template.layout.page(
     content = @`
-    <div>
-      <style type="text/css">
-       TABLE {
-        width: 300px;
-        border-collapse: collapse;
-       }
-       TD, TH {
-        padding: 3px;
-        border: 1px solid black;
-       }
-       TH {
-        background: #b0e0e6;
-       }
-      </style>
-    <table style="width:50%" border="2" align="center">
-      <tr>
-        <th>ID</th>
-        <th>Имя</th>
-        <th>Последняя проверка</th>
-        <th>Код ответа</th>
-      </tr>
-        @for(var url : page.getUrls())
-        <tr>
-            <td>${url.getId()}</td>
-            <td><a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a></td>
-            <td>
-                @if(url.getCheckedAt() == null)
-                @else
-                    ${new SimpleDateFormat("dd/MM/yyyy hh:mm").format(url.getCheckedAt())}
-                @endif
-            </td>
-            <td>
-                @if(url.getResponseCode() == null)
-                @else
-                    ${url.getResponseCode().toString()}
-                @endif
-            </td>
-        </tr>
-        @endfor
-    </table>
-    </div>
+    <body>
+    <section>
+        <div class="container-lg mt-5">
+            <h1>Сайты</h1>
+            <table class="table table-bordered table-hover mt-3">
+                <thead>
+                <tr>
+                    <th class="col-1">ID</th>
+                    <th>Имя</th>
+                    <th class="col-2">Последняя проверка</th>
+                    <th class="col-1">Код ответа</th>
+                </tr>
+                </thead>
+                <tbody>
+                @for(var url : page.getUrls())
+                        <tr>
+                            <td>${url.getId()}</td>
+                            <td><a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a></td>
+                            <td>
+                                @if(url.getCheckedAt() == null)
+                                @else
+                                    ${new SimpleDateFormat("dd/MM/yyyy hh:mm").format(url.getCheckedAt())}
+                                @endif
+                            </td>
+                            <td>
+                                @if(url.getResponseCode() == null)
+                                @else
+                                    ${url.getResponseCode().toString()}
+                                @endif
+                            </td>
+                        </tr>
+                @endfor
+                </tbody>
+            </table>
+        </div>
+    </section>
+    </body>
     `,
             header = @`
                 <p>
