@@ -8,7 +8,10 @@ import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
 import java.io.IOException;
@@ -97,14 +100,14 @@ public class AppTest {
                     .orElseThrow(() -> new NotFoundResponse("Url with id = 1 not found"));
             var postUrl = NamedRoutes.checkPath(savedUrl.getId());
             var response = client.post(postUrl);
-                assertThat(response.code()).isEqualTo(200);
+            assertThat(response.code()).isEqualTo(200);
 
-                var checks = UrlRepository.getChecksByUrlId((long) 1);
-                var title = checks.getFirst().getTitle();
-                var h1 = checks.getFirst().getH1();
+            var checks = UrlRepository.getChecksByUrlId((long) 1);
+            var title = checks.getFirst().getTitle();
+            var h1 = checks.getFirst().getH1();
 
-                assertThat(title).isEqualTo("Test");
-                assertThat(h1).isEqualTo("Test is successful");
+            assertThat(title).isEqualTo("Test");
+            assertThat(h1).isEqualTo("Test is successful");
         });
     }
 }
