@@ -49,7 +49,8 @@
             <footer class="footer border-top py-3 mt-5 bg-light">
                 <div class="container-xl">
                     <div class="text-center">
-                        Created by Peter Pesotskiy
+                        Created by
+                        <a href="https://github.com/ppeter777" target="_blank">Peter Pesotskiy</a>
                     </div>
                 </div>
             </footer>

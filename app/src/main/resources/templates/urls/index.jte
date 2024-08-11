@@ -1,7 +1,7 @@
 @import java.text.SimpleDateFormat
-
 @import hexlet.code.utils.NamedRoutes
 @import hexlet.code.dto.UrlsPage;
+
 @param UrlsPage page
 
 @template.layout.page(
@@ -45,10 +45,5 @@
     </body>
     `,
             header = @`
-                <p>
-                <p>Анализатор страниц</p>
-                <a href="${NamedRoutes.mainPagePath()}">Главная</a>
-                <a href="${NamedRoutes.urlsPath()}">Сайты</a>
-                </p>
             `
 )
