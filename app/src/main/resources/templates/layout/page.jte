@@ -1,11 +1,9 @@
 @import hexlet.code.utils.NamedRoutes
-@import hexlet.code.dto.MainPage
-@import hexlet.code.dto.UrlsPage
 @import hexlet.code.dto.BasePage
 @import gg.jte.Content
+
 @param Content content
 @param BasePage page = null
-@param Content header
 
 <!doctype html>
 <html lang="en">

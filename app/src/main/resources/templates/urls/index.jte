@@ -5,6 +5,7 @@
 @param UrlsPage page
 
 @template.layout.page(
+page = page,
     content = @`
     <body>
     <section>
@@ -27,7 +28,7 @@
                             <td>
                                 @if(url.getCheckedAt() == null)
                                 @else
-                                    ${new SimpleDateFormat("dd/MM/yyyy hh:mm").format(url.getCheckedAt())}
+                                    ${new SimpleDateFormat("dd/MM/yyyy HH:mm").format(url.getCheckedAt())}
                                 @endif
                             </td>
                             <td>
@@ -43,7 +44,5 @@
         </div>
     </section>
     </body>
-    `,
-            header = @`
-            `
+    `
 )

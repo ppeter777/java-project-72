@@ -37,7 +37,7 @@ public class AppTest {
     @BeforeAll
     public static void setUpMockServer() throws Exception {
         testServer = new MockWebServer();
-        var body = getFileContent(getFixturePath("mockTest.html"));
+        var body = getFileContent(getFixturePath("testPage.html"));
         MockResponse mockResponse = new MockResponse().setResponseCode(HttpStatus.OK.getCode()).setBody(body);
         testServer.enqueue(mockResponse);
         testServer.start();

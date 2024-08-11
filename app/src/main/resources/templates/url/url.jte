@@ -5,6 +5,7 @@
 @param UrlPage page
 
 @template.layout.page(
+page = page,
 content = @`
     <section>
         <div class="container-lg mt-5">
@@ -21,7 +22,7 @@ content = @`
                         </tr>
                         <tr>
                             <td>Дата создания</td>
-                            <td>${new SimpleDateFormat("dd/MM/yyyy hh:mm").format(page.getUrl().getCreatedAt())}</td>
+                            <td>${new SimpleDateFormat("dd/MM/yyyy HH:mm").format(page.getUrl().getCreatedAt())}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -49,7 +50,7 @@ content = @`
                             <td>${check.getTitle()}</td>
                             <td>${check.getH1()}</td>
                             <td>${check.getDescription()}</td>
-                            <td>${new SimpleDateFormat("dd/MM/yyyy hh:mm").format(check.getCreatedAt())}</td>
+                            <td>${new SimpleDateFormat("dd/MM/yyyy HH:mm").format(check.getCreatedAt())}</td>
                         </tr>
                     @endfor
                     @endif
@@ -57,11 +58,5 @@ content = @`
             </table>
         </div>
     </section>
-`,
-             header = @`
-                 <p>
-                 <p>Анализатор страниц</p>
-                 <a href="${NamedRoutes.mainPagePath()}">Главная</a>
-                 <a href="${NamedRoutes.urlsPath()}">Сайты</a>
-                 </p>
-                 `)
+    `
+)

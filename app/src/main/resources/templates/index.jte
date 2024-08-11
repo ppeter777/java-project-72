@@ -1,6 +1,8 @@
-@import hexlet.code.utils.NamedRoutes
+@import hexlet.code.dto.MainPage
+@param MainPage page
 
 @template.layout.page(
+page = page,
     content = @`
                     <div class="container-fluid bg-dark p-5">
                         <div class="row">
@@ -24,9 +26,5 @@
                             </div>
                         </div>
                     </div>
-    </body>
-</html>
-    `,
-        header = @`
-        `
+    `
 )

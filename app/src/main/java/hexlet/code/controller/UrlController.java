@@ -1,5 +1,6 @@
 package hexlet.code.controller;
 
+import hexlet.code.dto.MainPage;
 import hexlet.code.dto.UrlPage;
 import hexlet.code.dto.UrlsPage;
 import hexlet.code.model.UrlCheck;
@@ -17,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.Objects;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
@@ -53,12 +55,11 @@ public class UrlController {
             UrlRepository.save(urlSave);
             ctx.sessionAttribute("flash", "Страница успешно добавлена");
             ctx.sessionAttribute("flashType", "success");
-            ctx.redirect(NamedRoutes.urlsPath());
         } else {
             ctx.sessionAttribute("flash", "Страница уже существует");
             ctx.sessionAttribute("flashType", "info");
-            ctx.redirect(NamedRoutes.mainPagePath());
         }
+        ctx.redirect(NamedRoutes.urlsPath());
     }
 
     public static void index(Context ctx) throws SQLException {
@@ -71,7 +72,10 @@ public class UrlController {
     }
 
     public static void indexStart(Context ctx) throws SQLException {
-        ctx.render("index.jte");
+        var page = new MainPage();
+        page.setFlash(ctx.consumeSessionAttribute("flash"));
+        page.setFlashType(ctx.consumeSessionAttribute("flashType"));
+        ctx.render("index.jte", Collections.singletonMap("page", page));
     }
 
     public static void check(Context ctx) throws SQLException, IOException {
@@ -110,6 +114,6 @@ public class UrlController {
         }
         var urlChecks = UrlRepository.getChecksByUrlId(id);
         var page = new UrlPage(url, urlChecks);
-        ctx.render("url/url.jte", model("page", page));
+        ctx.redirect(NamedRoutes.urlPath(id));
     }
 }
