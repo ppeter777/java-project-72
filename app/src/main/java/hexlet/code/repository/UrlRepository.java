@@ -142,8 +142,8 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static void saveCheck(UrlCheck check) throws SQLException {
-        String sql = "INSERT INTO urlChecks (urlId, statusCode, title, h1, description, createdAt) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO urlChecks (urlId, statusCode, title, h1, description, createdAt) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setLong(1, check.getUrlId());
