@@ -9,15 +9,12 @@ import io.javalin.Javalin;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import io.javalin.rendering.template.JavalinJte;
 import gg.jte.resolve.ResourceCodeResolver;
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,14 +25,12 @@ public class App {
         return Integer.valueOf(port);
     }
 
-    public static void main(String[] args) throws SQLException, IOException, URISyntaxException {
+    public static void main(String[] args) throws SQLException, IOException {
         var app = getApp()
                 .start(getPort());
-        HttpResponse response = Unirest.get("http://localhost:7070/urls")
-                .asJson();
     }
 
-    public static Javalin getApp() throws SQLException, IOException, URISyntaxException {
+    public static Javalin getApp() throws SQLException {
         var hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(getDBUrl());
         var dataSource = new HikariDataSource(hikariConfig);
