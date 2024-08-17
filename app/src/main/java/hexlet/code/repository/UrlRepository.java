@@ -12,7 +12,7 @@ import java.sql.Statement;
 public class UrlRepository extends BaseRepository {
 
     public static void save(Url url) throws SQLException {
-        String sql = "INSERT INTO urls (name, createdAt) VALUES (?, ?)";
+        String sql = "INSERT INTO urls (name, created_at) VALUES (?, ?)";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
@@ -36,12 +36,12 @@ public class UrlRepository extends BaseRepository {
             while (resultSet.next()) {
                 var id = resultSet.getInt("id");
                 var name = resultSet.getString("name");
-                var createdAt = resultSet.getTimestamp("createdAt");
-                var checkedAt = resultSet.getTimestamp("checkedAt");
-                var responseCode = resultSet.getInt("responseCode");
+                var createdAt = resultSet.getTimestamp("created_at");
+//                var checkedAt = resultSet.getTimestamp("checked_at");
+//                var responseCode = resultSet.getInt("status_code");
                 var url = new Url(name, createdAt);
-                url.setCheckedAt(checkedAt);
-                url.setResponseCode(responseCode);
+//                url.setCheckedAt(checkedAt);
+//                url.setResponseCode(responseCode);
                 url.setId(id);
                 result.add(url);
             }
@@ -50,7 +50,7 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static List<UrlCheck> getChecksByUrlId(long urlId) throws SQLException {
-        String sql = "SELECT * FROM urlChecks WHERE urlId = ?";
+        String sql = "SELECT * FROM url_checks WHERE url_id = ?";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, urlId);
@@ -58,11 +58,11 @@ public class UrlRepository extends BaseRepository {
             var result = new ArrayList<UrlCheck>();
             while (resultSet.next()) {
                 var id = resultSet.getInt("id");
-                var statusCode = resultSet.getInt("statusCode");
+                var statusCode = resultSet.getInt("status_code");
                 var title = resultSet.getString("title");
                 var h1 = resultSet.getString("h1");
                 var description = resultSet.getString("description");
-                var createdAt = resultSet.getTimestamp("createdAt");
+                var createdAt = resultSet.getTimestamp("created_at");
                 var check = new UrlCheck();
                 check.setStatusCode(statusCode);
                 check.setTitle(title);
@@ -78,19 +78,19 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static List<UrlCheck> getChecks() throws SQLException {
-        String sql = "SELECT * FROM urlChecks";
+        String sql = "SELECT * FROM url_checks";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
             var resultSet = stmt.executeQuery();
             var result = new ArrayList<UrlCheck>();
             while (resultSet.next()) {
                 var id = resultSet.getInt("id");
-                var statusCode = resultSet.getInt("statusCode");
+                var statusCode = resultSet.getInt("status_code");
                 var title = resultSet.getString("title");
                 var h1 = resultSet.getString("h1");
                 var description = resultSet.getString("description");
-                var urlId = resultSet.getLong("urlId");
-                var createdAt = resultSet.getTimestamp("createdAt");
+                var urlId = resultSet.getLong("url_id");
+                var createdAt = resultSet.getTimestamp("created_at");
                 var check = new UrlCheck();
                 check.setStatusCode(statusCode);
                 check.setTitle(title);
@@ -106,6 +106,34 @@ public class UrlRepository extends BaseRepository {
         }
     }
 
+    public static Optional<UrlCheck> getLastCheck(long urlId) throws SQLException {
+        var sql = "SELECT * FROM url_checks WHERE url_id = ? ORDER BY created_at DESC LIMIT 1";
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, urlId);
+            var resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                var id = resultSet.getInt("id");
+                var statusCode = resultSet.getInt("status_code");
+                var title = resultSet.getString("title");
+                var h1 = resultSet.getString("h1");
+                var description = resultSet.getString("description");
+                var createdAt = resultSet.getTimestamp("created_at");
+                var check = new UrlCheck();
+                check.setStatusCode(statusCode);
+                check.setTitle(title);
+                check.setH1(h1);
+                check.setDescription(description);
+                check.setCreatedAt(createdAt);
+                check.setId(id);
+                check.setUrlId(urlId);
+                return Optional.of(check);
+            }
+            return Optional.empty();
+        }
+    }
+
+
     public static Optional<Url> find(Long id) throws SQLException {
         var sql = "SELECT * FROM urls WHERE id = ?";
         try (var conn = dataSource.getConnection();
@@ -114,7 +142,7 @@ public class UrlRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 var name = resultSet.getString("name");
-                var timestamp = resultSet.getTimestamp("createdAt");
+                var timestamp = resultSet.getTimestamp("created_at");
                 var url = new Url(name, timestamp);
                 url.setId(id);
                 return Optional.of(url);
@@ -132,7 +160,7 @@ public class UrlRepository extends BaseRepository {
             if (resultSet.next()) {
                 var id = resultSet.getLong("id");
                 var name = resultSet.getString("name");
-                var timestamp = resultSet.getTimestamp("createdAt");
+                var timestamp = resultSet.getTimestamp("created_at");
                 var url = new Url(name, timestamp);
                 url.setId(id);
                 return Optional.of(url);
@@ -142,7 +170,7 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static void saveCheck(UrlCheck check) throws SQLException {
-        String sql = "INSERT INTO urlChecks (urlId, statusCode, title, h1, description, createdAt) "
+        String sql = "INSERT INTO url_checks (url_id, status_code, title, h1, description, created_at) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -163,7 +191,7 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static void updateUrl(Url url) throws SQLException {
-        String sql = "UPDATE urls SET checkedAt = ?, responseCode = ? WHERE id = ?";
+        String sql = "UPDATE urls SET checked_at = ?, status_code = ? WHERE id = ?";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setTimestamp(1, url.getCheckedAt());

@@ -103,9 +103,9 @@ public class UrlController {
             check.setCreatedAt(createdAt);
             UrlRepository.saveCheck(check);
 
-            url.setResponseCode(statusCode);
-            url.setCheckedAt(createdAt);
-            UrlRepository.updateUrl(url);
+//            url.setResponseCode(statusCode);
+//            url.setCheckedAt(createdAt);
+//            UrlRepository.updateUrl(url);
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flashType", "success");
         } catch (Exception exception) {
