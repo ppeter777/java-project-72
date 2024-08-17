@@ -79,7 +79,7 @@ public class AppTest {
         var url = new Url("https://mysite.ru:8000/path/", new Timestamp(System.currentTimeMillis()));
         UrlRepository.save(url);
         JavalinTest.test(app, (server, client) -> {
-            var response = client.get("/url/" + url.getId());
+            var response = client.get("/urls/" + url.getId());
             assertThat(response.code()).isEqualTo(200);
         });
     }
