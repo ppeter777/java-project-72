@@ -8,6 +8,7 @@ import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterAll;
@@ -80,10 +81,23 @@ public class AppTest {
         UrlRepository.save(url);
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/urls/" + url.getId());
+            assertThat(response.body().string()).contains("mysite.ru");
             assertThat(response.code()).isEqualTo(200);
         });
     }
 
+    @Test
+    public void testUrls() {
+        JavalinTest.test(app, (server, client) -> {
+            client.post("/urls", "url=http://mail.ru");
+            client.post("/urls", "url=http://google.com");
+            client.post("/urls", "url=http://cnn.com");
+            var response = client.get("/urls");
+            assertThat(response.code()).isEqualTo(200);
+            assertThat(response.body().string()).contains("mail.ru", "google.com", "cnn.com");
+        });
+    }
+    
     @Test
     void urlNotFound() {
         JavalinTest.test(app, (server, client) -> {
