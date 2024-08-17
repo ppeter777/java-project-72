@@ -8,7 +8,6 @@ import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterAll;
@@ -97,7 +96,7 @@ public class AppTest {
             assertThat(response.body().string()).contains("mail.ru", "google.com", "cnn.com");
         });
     }
-    
+
     @Test
     void urlNotFound() {
         JavalinTest.test(app, (server, client) -> {
