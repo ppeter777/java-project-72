@@ -8,6 +8,7 @@ import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterAll;
@@ -98,10 +99,29 @@ public class AppTest {
     }
 
     @Test
+    public void testExistingUrlCheck() {
+        JavalinTest.test(app, (server, client) -> {
+            client.post("/urls", "url=http://mail.ru");
+            var response = client.get("/urls/1/checks");
+            assertThat(response.code()).isEqualTo(200);
+            assertThat(response.body().string()).contains("бесплатная почта");
+        });
+    }
+
+    @Test
     void urlNotFound() {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/url/999999");
             assertThat(response.code()).isEqualTo(404);
+        });
+    }
+
+    @Test
+    public void testCreateIncorrectUrl() {
+        JavalinTest.test(app, (server, client) -> {
+            var requestBody = "url=qwerty";
+            var response = client.post("/urls", requestBody);
+            AssertionsForClassTypes.assertThat(response.body().string()).doesNotContain("qwerty");
         });
     }
 
@@ -114,11 +134,9 @@ public class AppTest {
             var postUrl = NamedRoutes.checkPath(savedUrl.getId());
             var response = client.post(postUrl);
             assertThat(response.code()).isEqualTo(200);
-
             var checks = UrlRepository.getChecksByUrlId((long) 1);
             var title = checks.getFirst().getTitle();
             var h1 = checks.getFirst().getH1();
-
             assertThat(title).isEqualTo("Test");
             assertThat(h1).isEqualTo("Test is successful");
         });

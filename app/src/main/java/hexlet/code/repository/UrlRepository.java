@@ -37,11 +37,7 @@ public class UrlRepository extends BaseRepository {
                 var id = resultSet.getInt("id");
                 var name = resultSet.getString("name");
                 var createdAt = resultSet.getTimestamp("created_at");
-//                var checkedAt = resultSet.getTimestamp("checked_at");
-//                var responseCode = resultSet.getInt("status_code");
                 var url = new Url(name, createdAt);
-//                url.setCheckedAt(checkedAt);
-//                url.setResponseCode(responseCode);
                 url.setId(id);
                 result.add(url);
             }
@@ -189,17 +185,4 @@ public class UrlRepository extends BaseRepository {
             }
         }
     }
-
-    public static void updateUrl(Url url) throws SQLException {
-        String sql = "UPDATE urls SET checked_at = ?, status_code = ? WHERE id = ?";
-        try (var conn = dataSource.getConnection();
-             var preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setTimestamp(1, url.getCheckedAt());
-            preparedStatement.setInt(2, url.getResponseCode());
-            preparedStatement.setLong(3, url.getId());
-            var i = preparedStatement.executeUpdate();
-            System.out.println(i);
-        }
-    }
 }
-

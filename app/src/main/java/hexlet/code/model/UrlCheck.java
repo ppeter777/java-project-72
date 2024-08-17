@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 
-
 public class UrlCheck {
     private long id;
     private long urlId;

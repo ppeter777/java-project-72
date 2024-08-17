@@ -89,31 +89,22 @@ public class UrlController {
             var title = doc.title();
             int statusCode = response.getStatus();
             var h1 = doc.selectFirst("h1") == null ? "" : Objects.requireNonNull(doc.selectFirst("h1")).text();
-
             String description = doc.select("meta[name=description]").first() == null ? ""
                     : doc.select("meta[name=description]").first().attr("content");
-
             check.setH1(h1);
             check.setStatusCode(statusCode);
             check.setTitle(title);
             check.setDescription(description);
             check.setUrlId(id);
-
             var createdAt = new Timestamp(System.currentTimeMillis());
             check.setCreatedAt(createdAt);
             UrlRepository.saveCheck(check);
-
-//            url.setResponseCode(statusCode);
-//            url.setCheckedAt(createdAt);
-//            UrlRepository.updateUrl(url);
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flashType", "success");
         } catch (Exception exception) {
             ctx.sessionAttribute("flash", "Некорректный адрес");
             ctx.sessionAttribute("flashType", "danger");
         }
-        var urlChecks = UrlRepository.getChecksByUrlId(id);
-        var page = new UrlPage(url, urlChecks);
         ctx.redirect(NamedRoutes.urlPath(id));
     }
 }
