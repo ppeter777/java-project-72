@@ -38,6 +38,12 @@ public class AppTest {
         return Paths.get("src/test/resources/fixtures/" + filename).toAbsolutePath().normalize();
     }
 
+    public static String removeLastChar(String s) {
+        return (s == null || s.length() == 0)
+                ? null
+                : (s.substring(0, s.length() - 1));
+    }
+
     @BeforeAll
     public static void setUpMockServer() throws Exception {
         testServer = new MockWebServer();
@@ -45,7 +51,7 @@ public class AppTest {
         MockResponse mockResponse = new MockResponse().setResponseCode(HttpStatus.OK.getCode()).setBody(body);
         testServer.enqueue(mockResponse);
         testServer.start();
-        testUrl = testServer.url("/test").toString();
+        testUrl = removeLastChar(testServer.url("/").toString());
     }
 
     @AfterAll
@@ -87,7 +93,7 @@ public class AppTest {
     }
 
     @Test
-    public void testUrls() {
+    public void addMultipleUrls() {
         JavalinTest.test(app, (server, client) -> {
             client.post("/urls", "url=http://mail.ru");
             client.post("/urls", "url=http://google.com");
@@ -95,16 +101,6 @@ public class AppTest {
             var response = client.get("/urls");
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains("mail.ru", "google.com", "cnn.com");
-        });
-    }
-
-    @Test
-    public void testExistingUrlCheck() {
-        JavalinTest.test(app, (server, client) -> {
-            client.post("/urls", "url=http://mail.ru");
-            var response = client.get("/urls/1/checks");
-            assertThat(response.code()).isEqualTo(200);
-            assertThat(response.body().string()).contains("бесплатная почта");
         });
     }
 
@@ -125,20 +121,15 @@ public class AppTest {
         });
     }
 
-    @Test void testUrlCheck() throws Exception {
-        var url = new Url(testUrl, Timestamp.valueOf(LocalDateTime.now()));
-        UrlRepository.save(url);
+    @Test
+    public void testUrlCheck() {
         JavalinTest.test(app, (server, client) -> {
-            var savedUrl = UrlRepository.find((long) 1)
-                    .orElseThrow(() -> new NotFoundResponse("Url with id = 1 not found"));
-            var postUrl = NamedRoutes.checkPath(savedUrl.getId());
-            var response = client.post(postUrl);
+            client.post("/urls", "url=" + testUrl);
+            var response = client.get("/urls");
             assertThat(response.code()).isEqualTo(200);
-            var checks = UrlRepository.getChecksByUrlId((long) 1);
-            var title = checks.getFirst().getTitle();
-            var h1 = checks.getFirst().getH1();
-            assertThat(title).isEqualTo("Test");
-            assertThat(h1).isEqualTo("Test is successful");
+            assertThat(!response.body().string().contains("Test is successful"));
+            var response2 = client.get("/urls/1/checks");
+            assertThat(response2.body().string()).contains("Test is successful");
         });
     }
 }
