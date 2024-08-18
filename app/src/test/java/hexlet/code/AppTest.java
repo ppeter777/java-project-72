@@ -3,9 +3,7 @@ package hexlet.code;
 import static org.assertj.core.api.Assertions.assertThat;
 import hexlet.code.model.Url;
 import hexlet.code.repository.UrlRepository;
-import hexlet.code.utils.NamedRoutes;
 import io.javalin.http.HttpStatus;
-import io.javalin.http.NotFoundResponse;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -22,7 +20,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 public class AppTest {
 
