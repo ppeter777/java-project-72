@@ -115,14 +115,7 @@ public class UrlRepository extends BaseRepository {
                 var h1 = resultSet.getString("h1");
                 var description = resultSet.getString("description");
                 var createdAt = resultSet.getTimestamp("created_at");
-                var check = new UrlCheck();
-                check.setStatusCode(statusCode);
-                check.setTitle(title);
-                check.setH1(h1);
-                check.setDescription(description);
-                check.setCreatedAt(createdAt);
-                check.setId(id);
-                check.setUrlId(urlId);
+                var check = new UrlCheck(id,urlId,statusCode,title,h1,description,createdAt);
                 return Optional.of(check);
             }
             return Optional.empty();

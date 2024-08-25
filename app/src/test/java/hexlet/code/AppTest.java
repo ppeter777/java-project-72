@@ -138,7 +138,7 @@ public class AppTest {
             AssertionsForClassTypes.assertThat(response.code()).isEqualTo(200);
             AssertionsForClassTypes.assertThat(response.body().string()).contains("Сайты");
             AssertionsForClassTypes.assertThat(client.post("/urls", requestBody).body().string())
-                    .contains("Сайты");
+                    .contains("Бесплатно проверяйте сайты на SEO пригодность");
         });
     }
 }

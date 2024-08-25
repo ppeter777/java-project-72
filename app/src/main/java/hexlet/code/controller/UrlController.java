@@ -55,11 +55,12 @@ public class UrlController {
             UrlRepository.save(urlSave);
             ctx.sessionAttribute("flash", "Страница успешно добавлена");
             ctx.sessionAttribute("flashType", "success");
+            ctx.redirect(NamedRoutes.urlsPath());
         } else {
             ctx.sessionAttribute("flash", "Страница уже существует");
             ctx.sessionAttribute("flashType", "info");
+            ctx.redirect(NamedRoutes.mainPagePath());
         }
-        ctx.redirect(NamedRoutes.urlsPath());
     }
 
     public static void index(Context ctx) throws SQLException {
