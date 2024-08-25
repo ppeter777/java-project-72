@@ -129,4 +129,16 @@ public class AppTest {
             assertThat(response2.body().string()).contains("Test is successful");
         });
     }
+
+    @Test
+    public void testCreateDuplicateUrl() {
+        JavalinTest.test(app, (server, client) -> {
+            var requestBody = "url=" + testUrl;
+            var response = client.post("/urls", requestBody);
+            AssertionsForClassTypes.assertThat(response.code()).isEqualTo(200);
+            AssertionsForClassTypes.assertThat(response.body().string()).contains("Сайты");
+            AssertionsForClassTypes.assertThat(client.post("/urls", requestBody).body().string())
+                    .contains("Сайты");
+        });
+    }
 }
