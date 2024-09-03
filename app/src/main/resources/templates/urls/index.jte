@@ -26,12 +26,12 @@ page = page,
                             <td>${url.getId()}</td>
                             <td><a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a></td>
                             <td>
-                            ${page.getLastCheck(url.getId()).isEmpty() ? "" :
-                                new SimpleDateFormat("dd/MM/yyyy HH:mm").format(page.getLastCheck(url.getId()).get().getCreatedAt())}
+                            ${page.getLastChecks().get((long) url.getId()) == null ? "" :
+                                new SimpleDateFormat("dd/MM/yyyy HH:mm").format(page.getLastChecks().get((long) url.getId()).getCreatedAt())}
                             </td>
                             <td>
-                            ${page.getLastCheck(url.getId()).isEmpty() ? "" :
-                                String.valueOf(page.getLastCheck(url.getId()).get().getStatusCode())}
+                            ${page.getLastChecks().get((long) url.getId()) == null ? "" :
+                                String.valueOf(page.getLastChecks().get((long) url.getId()).getStatusCode())}
                             </td>
                         </tr>
                 @endfor

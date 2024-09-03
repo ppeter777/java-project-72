@@ -4,6 +4,7 @@ import hexlet.code.dto.MainPage;
 import hexlet.code.dto.UrlPage;
 import hexlet.code.dto.UrlsPage;
 import hexlet.code.model.UrlCheck;
+import hexlet.code.repository.UrlCheckRepository;
 import hexlet.code.utils.NamedRoutes;
 import hexlet.code.model.Url;
 import hexlet.code.repository.UrlRepository;
@@ -28,7 +29,7 @@ public class UrlController {
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var url = UrlRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("Url with idd = " + id + " not found"));
-        var urlChecks = UrlRepository.getChecksByUrlId(id);
+        var urlChecks = UrlCheckRepository.getChecksByUrlId(id);
         var page = new UrlPage(url, urlChecks);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
         page.setFlashType(ctx.consumeSessionAttribute("flashType"));
@@ -65,8 +66,8 @@ public class UrlController {
 
     public static void index(Context ctx) throws SQLException {
         var urls = UrlRepository.getEntities();
-        var checks = UrlRepository.getChecks();
-        var page = new UrlsPage(urls, checks);
+        var lastChecks = UrlCheckRepository.getLastChecks();
+        var page = new UrlsPage(urls, lastChecks);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
         page.setFlashType(ctx.consumeSessionAttribute("flashType"));
         ctx.render("urls/index.jte", model("page", page));
@@ -99,7 +100,7 @@ public class UrlController {
             check.setUrlId(id);
             var createdAt = new Timestamp(System.currentTimeMillis());
             check.setCreatedAt(createdAt);
-            UrlRepository.saveCheck(check);
+            UrlCheckRepository.saveCheck(check);
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flashType", "success");
         } catch (Exception exception) {
