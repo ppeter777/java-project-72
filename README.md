@@ -10,7 +10,8 @@
 ### Локальный запуск
     
     make run
-    в браузере перейти на http://localhost:7070/
+
+в браузере перейти на http://localhost:7070/
 
 ### Адрес сайта на render.com
 https://java-project-72-6c6x.onrender.com
