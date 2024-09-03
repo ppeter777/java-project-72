@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-public class UrlCheckRepository extends BaseRepository{
+public class UrlCheckRepository extends BaseRepository {
 
     public static List<UrlCheck> getChecksByUrlId(long urlId) throws SQLException {
         String sql = "SELECT * FROM url_checks WHERE url_id = ?";
