@@ -66,8 +66,8 @@ public class UrlController {
 
     public static void index(Context ctx) throws SQLException {
         var urls = UrlRepository.getEntities();
-        var checks = UrlCheckRepository.getChecks();
-        var page = new UrlsPage(urls, checks);
+        var lastChecks = UrlCheckRepository.getLastChecks();
+        var page = new UrlsPage(urls, lastChecks);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
         page.setFlashType(ctx.consumeSessionAttribute("flashType"));
         ctx.render("urls/index.jte", model("page", page));

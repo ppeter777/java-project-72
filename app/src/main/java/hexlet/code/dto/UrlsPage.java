@@ -2,6 +2,7 @@ package hexlet.code.dto;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import hexlet.code.model.Url;
@@ -14,7 +15,8 @@ import lombok.Getter;
 @Getter
 public class UrlsPage extends BasePage {
     private List<Url> urls;
-    private List<UrlCheck> checks;
+//    private List<UrlCheck> checks;
+    private Map<Long, UrlCheck> lastChecks;
 
     public static Optional<UrlCheck> getLastCheck(long id) {
         try {
