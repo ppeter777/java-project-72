@@ -16,7 +16,7 @@ import lombok.Getter;
 public class UrlsPage extends BasePage {
     private List<Url> urls;
 //    private List<UrlCheck> checks;
-    private Map<Long, UrlCheck> lastChecks;
+    private Optional<Map<Long, UrlCheck>> lastChecks;
 
     public static Optional<UrlCheck> getLastCheck(long id) {
         try {

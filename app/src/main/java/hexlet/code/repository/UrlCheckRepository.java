@@ -3,11 +3,7 @@ package hexlet.code.repository;
 import hexlet.code.model.UrlCheck;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
 
 public class UrlCheckRepository extends BaseRepository {
 
@@ -54,7 +50,7 @@ public class UrlCheckRepository extends BaseRepository {
         }
     }
 
-    public static Map<Long, UrlCheck> getLastChecks() throws SQLException {
+    public static Optional<Map<Long, UrlCheck>> getLastChecks() throws SQLException {
         String sql = "SELECT DISTINCT ON (url_id) * FROM url_checks ORDER BY created_at DESC";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
@@ -71,7 +67,7 @@ public class UrlCheckRepository extends BaseRepository {
                 var check = new UrlCheck(id, urlId, statusCode, title, h1, description, createdAt);
                 result.put(urlId, check);
             }
-            return result;
+            return Optional.of(result);
         }
     }
 
