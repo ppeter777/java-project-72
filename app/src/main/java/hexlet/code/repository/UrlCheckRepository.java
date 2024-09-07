@@ -55,24 +55,24 @@ public class UrlCheckRepository extends BaseRepository {
     }
 
     public static Map<Long, UrlCheck> getLastChecks() throws SQLException {
-        String sql = "SELECT DISTINCT ON (url_id) * FROM url_checks ORDER BY created_at DESC";
-        try (var conn = dataSource.getConnection();
-             var stmt = conn.prepareStatement(sql)) {
-            var resultSet = stmt.executeQuery();
+//        String sql = "SELECT DISTINCT ON (url_id) * FROM url_checks ORDER BY created_at DESC";
+//        try (var conn = dataSource.getConnection();
+//             var stmt = conn.prepareStatement(sql)) {
+//            var resultSet = stmt.executeQuery();
             var result = new HashMap<Long, UrlCheck>();
-            while (resultSet.next()) {
-                var id = resultSet.getInt("id");
-                var statusCode = resultSet.getInt("status_code");
-                var title = resultSet.getString("title");
-                var h1 = resultSet.getString("h1");
-                var description = resultSet.getString("description");
-                var createdAt = resultSet.getTimestamp("created_at");
-                var urlId = resultSet.getLong("url_id");
-                var check = new UrlCheck(id, urlId, statusCode, title, h1, description, createdAt);
-                result.put(urlId, check);
-            }
+//            while (resultSet.next()) {
+//                var id = resultSet.getInt("id");
+//                var statusCode = resultSet.getInt("status_code");
+//                var title = resultSet.getString("title");
+//                var h1 = resultSet.getString("h1");
+//                var description = resultSet.getString("description");
+//                var createdAt = resultSet.getTimestamp("created_at");
+//                var urlId = resultSet.getLong("url_id");
+//                var check = new UrlCheck(id, urlId, statusCode, title, h1, description, createdAt);
+//                result.put(urlId, check);
+//            }
             return result;
-        }
+//        }
     }
 
     public static List<UrlCheck> getChecks() throws SQLException {
