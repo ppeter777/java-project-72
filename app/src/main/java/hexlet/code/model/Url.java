@@ -11,8 +11,6 @@ public class Url {
     private long id;
     private String name;
     private Timestamp createdAt;
-    private Timestamp checkedAt;
-    private Integer responseCode;
 
     public Url(String name) {
         this.name = name;

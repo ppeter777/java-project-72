@@ -80,7 +80,6 @@ public class UrlController {
     }
 
     public static void check(Context ctx) throws SQLException, IOException {
-        var check = new UrlCheck();
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var url = UrlRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("Url with idd = " + id + " not found"));
@@ -92,10 +91,7 @@ public class UrlController {
             var h1 = doc.selectFirst("h1") == null ? "" : Objects.requireNonNull(doc.selectFirst("h1")).text();
             String description = doc.select("meta[name=description]").first() == null ? ""
                     : doc.select("meta[name=description]").first().attr("content");
-            check.setH1(h1);
-            check.setStatusCode(statusCode);
-            check.setTitle(title);
-            check.setDescription(description);
+            var check = new UrlCheck(statusCode, title, h1, description);
             check.setUrlId(id);
             UrlCheckRepository.saveCheck(check);
             ctx.sessionAttribute("flash", "Страница успешно проверена");
