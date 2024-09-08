@@ -84,33 +84,4 @@ public class UrlCheckRepository extends BaseRepository {
             return result;
         }
     }
-
-    public static List<UrlCheck> getChecks() throws SQLException {
-        String sql = "SELECT * FROM url_checks";
-        try (var conn = dataSource.getConnection();
-             var stmt = conn.prepareStatement(sql)) {
-            var resultSet = stmt.executeQuery();
-            var result = new ArrayList<UrlCheck>();
-            while (resultSet.next()) {
-                var id = resultSet.getInt("id");
-                var statusCode = resultSet.getInt("status_code");
-                var title = resultSet.getString("title");
-                var h1 = resultSet.getString("h1");
-                var description = resultSet.getString("description");
-                var urlId = resultSet.getLong("url_id");
-                var createdAt = resultSet.getTimestamp("created_at");
-                var check = new UrlCheck();
-                check.setStatusCode(statusCode);
-                check.setTitle(title);
-                check.setH1(h1);
-                check.setDescription(description);
-                check.setCreatedAt(createdAt);
-                check.setId(id);
-                check.setUrlId(urlId);
-                result.add(check);
-            }
-            Collections.reverse(result);
-            return result;
-        }
-    }
 }

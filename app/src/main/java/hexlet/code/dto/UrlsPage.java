@@ -15,14 +15,5 @@ import lombok.Getter;
 @Getter
 public class UrlsPage extends BasePage {
     private List<Url> urls;
-//    private List<UrlCheck> checks;
     private Map<Long, UrlCheck> lastChecks;
-
-    public static Optional<UrlCheck> getLastCheck(long id) {
-        try {
-            return UrlRepository.getLastCheck(id);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
