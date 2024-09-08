@@ -14,8 +14,8 @@ public class Url {
     private Timestamp checkedAt;
     private Integer responseCode;
 
-    public Url(String name, Timestamp timestamp) {
+    public Url(String name) {
         this.name = name;
-        this.createdAt = timestamp;
+//        this.createdAt = timestamp;
     }
 }

@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -51,7 +50,7 @@ public class UrlController {
             ctx.redirect(NamedRoutes.mainPagePath());
             return;
         }
-        var urlSave = new Url(urlName, new Timestamp(System.currentTimeMillis()));
+        var urlSave = new Url(urlName);
         if (UrlRepository.findByName(urlName).isEmpty()) {
             UrlRepository.save(urlSave);
             ctx.sessionAttribute("flash", "Страница успешно добавлена");
@@ -98,8 +97,6 @@ public class UrlController {
             check.setTitle(title);
             check.setDescription(description);
             check.setUrlId(id);
-            var createdAt = new Timestamp(System.currentTimeMillis());
-            check.setCreatedAt(createdAt);
             UrlCheckRepository.saveCheck(check);
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flashType", "success");
