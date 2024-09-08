@@ -59,7 +59,7 @@ public class UrlCheckRepository extends BaseRepository {
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
             var resultSet = stmt.executeQuery();
-        var result = new HashMap<Long, UrlCheck>();
+            var result = new HashMap<Long, UrlCheck>();
             while (resultSet.next()) {
                 var id = resultSet.getInt("id");
                 var statusCode = resultSet.getInt("status_code");
@@ -71,7 +71,7 @@ public class UrlCheckRepository extends BaseRepository {
                 var check = new UrlCheck(id, urlId, statusCode, title, h1, description, createdAt);
                 result.put(urlId, check);
             }
-        return result;
+            return result;
         }
     }
 
