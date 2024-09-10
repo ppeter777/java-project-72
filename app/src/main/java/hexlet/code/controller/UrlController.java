@@ -4,10 +4,10 @@ import hexlet.code.dto.MainPage;
 import hexlet.code.dto.UrlPage;
 import hexlet.code.dto.UrlsPage;
 import hexlet.code.model.UrlCheck;
-import hexlet.code.repository.UrlCheckRepository;
 import hexlet.code.utils.NamedRoutes;
 import hexlet.code.model.Url;
 import hexlet.code.repository.UrlRepository;
+import hexlet.code.repository.UrlCheckRepository;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 import kong.unirest.HttpResponse;
@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -51,7 +50,7 @@ public class UrlController {
             ctx.redirect(NamedRoutes.mainPagePath());
             return;
         }
-        var urlSave = new Url(urlName, new Timestamp(System.currentTimeMillis()));
+        var urlSave = new Url(urlName);
         if (UrlRepository.findByName(urlName).isEmpty()) {
             UrlRepository.save(urlSave);
             ctx.sessionAttribute("flash", "Страница успешно добавлена");
@@ -81,7 +80,6 @@ public class UrlController {
     }
 
     public static void check(Context ctx) throws SQLException, IOException {
-        var check = new UrlCheck();
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var url = UrlRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("Url with idd = " + id + " not found"));
@@ -93,13 +91,8 @@ public class UrlController {
             var h1 = doc.selectFirst("h1") == null ? "" : Objects.requireNonNull(doc.selectFirst("h1")).text();
             String description = doc.select("meta[name=description]").first() == null ? ""
                     : doc.select("meta[name=description]").first().attr("content");
-            check.setH1(h1);
-            check.setStatusCode(statusCode);
-            check.setTitle(title);
-            check.setDescription(description);
+            var check = new UrlCheck(statusCode, title, h1, description);
             check.setUrlId(id);
-            var createdAt = new Timestamp(System.currentTimeMillis());
-            check.setCreatedAt(createdAt);
             UrlCheckRepository.saveCheck(check);
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flashType", "success");

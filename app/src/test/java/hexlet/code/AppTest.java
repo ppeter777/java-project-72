@@ -19,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 public class AppTest {
 
@@ -80,7 +79,7 @@ public class AppTest {
 
     @Test
     public void testUrlPage() throws SQLException {
-        var url = new Url("https://mysite.ru:8000/path/", new Timestamp(System.currentTimeMillis()));
+        var url = new Url("https://mysite.ru:8000/path/");
         UrlRepository.save(url);
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/urls/" + url.getId());
